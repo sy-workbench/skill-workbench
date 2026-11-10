@@ -1,6 +1,6 @@
 # Design notes: the Agent Inbox
 
-These notes explain why the two Agent Inbox skills are built the way they are. You do not need them to run the skills.
+These notes explain why the three Agent Inbox skills (loader, pusher, screenshot-intake) are built the way they are. You do not need them to run the skills.
 
 ## The problem
 
@@ -21,6 +21,8 @@ One shared Notion database acts as a mailbox. A writer skill leaves a short stru
                                                  (Resolution written in the same update)
 
  discussion --pusher (Mode B)--> pasteable prompt in the chat (nothing is saved)
+
+ screenshots in Drive --screenshot-intake--> entry: Pending  (original image moved to _archive)
 ```
 
 ## Decisions worth knowing
@@ -31,3 +33,5 @@ One shared Notion database acts as a mailbox. A writer skill leaves a short stru
 - **Assignment is the human's call.** An empty `Handover To` means "not assigned yet". Agents do not claim unassigned entries on their own.
 - **Two modes in the writer.** Saving to Notion is heavy for a quick session switch. Mode B prints a prompt instead and keeps nothing. When a phrase could mean either, the skill asks once.
 - **Redact before writing.** Entries live outside your machine, so sensitive figures are rewritten as relative terms or "see local file" before they are written.
+- **Screenshots become entries, originals are archived.** The intake skill turns loose screenshots into entries and moves each original to `_archive` under a readable name, so the drop folder stays empty and an original can always be found again. Several shots of one post become one entry. Images it cannot read stay in place.
+- **Your values live in `settings.md`.** Each skill ships `settings.example.md`. You copy it to `settings.md` and fill it in, and `SKILL.md` holds none of your values. An update can then replace `SKILL.md` without touching your settings. Environments that keep only `SKILL.md` get a pasted settings block instead.

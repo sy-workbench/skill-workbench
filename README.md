@@ -10,8 +10,9 @@ Traditional Chinese: [README.zh-TW.md](README.zh-TW.md)
 
 | Skill | Category | Version | What it does |
 |---|---|---|---|
-| [agent-inbox-loader](workflow/agent-inbox-loader/README.md) | workflow | 1.0 | Loads one entry from a shared Notion "Agent Inbox" into the current session, so you can continue work started elsewhere |
-| [agent-inbox-pusher](workflow/agent-inbox-pusher/README.md) | workflow | 1.1 | Saves the current discussion as an Agent Inbox entry, or prints a pasteable handoff prompt for a new session |
+| [agent-inbox-loader](workflow/agent-inbox-loader/README.md) | workflow | 1.1 | Loads one entry from a shared Notion "Agent Inbox" into the current session, so you can continue work started elsewhere |
+| [agent-inbox-pusher](workflow/agent-inbox-pusher/README.md) | workflow | 1.2 | Saves the current discussion as an Agent Inbox entry, or prints a pasteable handoff prompt for a new session |
+| [agent-inbox-screenshot-intake](workflow/agent-inbox-screenshot-intake/README.md) | workflow | 1.1 | Turns loose screenshots in a Google Drive folder into Notion Agent Inbox entries, groups multi-shot captures, routes them to agents, and archives the originals |
 
 More skills will be added by category as they are cleaned up.
 
@@ -22,11 +23,12 @@ skill-workbench/
   README.md            this index
   README.zh-TW.md      Traditional Chinese index
   LICENSE              MIT
-  PLACEHOLDERS.md      every value you must fill in, and where
+  PLACEHOLDERS.md      every setting you must fill in, and where
   docs/                design notes (not needed to run a skill)
   workflow/            skills about moving work between agents and sessions
     <skill-name>/
       SKILL.md         the skill
+      settings.example.md  the values you fill in (copy to settings.md)
       README.md        setup and usage
       README.zh-TW.md  Traditional Chinese README
       CHANGELOG.md     version history
@@ -39,7 +41,7 @@ Each skill folder is self-contained. Copy one folder and it works on its own. Sh
 
 1. Open the skill's README and follow its Setup section.
 2. Copy the skill folder into your agent's skills directory.
-3. Fill in the placeholders in `SKILL.md`. If one is left empty, the skill stops and tells you.
+3. Copy `settings.example.md` to `settings.md` in the skill folder and fill it in. If a value is missing, the skill stops and tells you. You never edit `SKILL.md`, so updates can replace it.
 
 ## Versions
 

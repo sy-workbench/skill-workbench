@@ -1,20 +1,15 @@
 ---
 name: "agent-inbox-loader"
-version: "1.0"
-updated: "2026-11-09"
+version: "1.1"
+updated: "2026-11-10"
 description: "Load a Notion Agent Inbox entry's full content into the current session. Use when the user says \"read inbox\", \"load inbox\", \"fetch inbox\", or names a specific inbox entry they want to pick up. Also trigger when the user says something like \"let's continue the [topic] discussion\" and the context likely lives in the Agent Inbox. If no title is given, list the candidates and let the user choose."
 ---
 
-## Setup (fill in once)
+## Settings
 
-Replace the two placeholders below with your own values (see README.md for how to find them). If a placeholder in the form `<YOUR_...>` still appears anywhere outside this table, stop and tell the user to finish Setup first. Do not guess values.
+Before anything else, read `settings.md` in the same folder as this file. It holds the **Active view URL** and the **Data source ID**. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
 
-| Placeholder | What to put there |
-|---|---|
-| `<YOUR_ACTIVE_VIEW_URL>` | URL of the Notion view that shows Pending and Picked Up entries, sorted by Date descending |
-| `<YOUR_AGENT_INBOX_DATA_SOURCE_ID>` | The database's data source ID, in the form `collection://...` |
-
-Each agent also needs a role name that matches one option of the `Handover To` property. Define it in that agent's own instructions, not in this file.
+Each agent also needs a role name that matches one option of the `Handover To` property. Define it in that agent's own instructions, not in this file or in settings.
 
 ## Overview
 
@@ -40,7 +35,7 @@ No other input is required.
 
 ### Step 1: Resolve the entry
 
-Active view URL: `<YOUR_ACTIVE_VIEW_URL>`
+Active view URL: the **Active view URL** in `settings.md`
 
 This view (Status is Pending or Picked Up, sorted by Date descending) is the single source for "what is active". Query it in **view mode**:
 
@@ -54,7 +49,7 @@ The view returns every agent's active entries, so filter client-side by `Handove
 
 ```sql
 SELECT url, Title, Type, "Handover To", Status, "date:Date:start" AS d
-FROM "collection://<YOUR_AGENT_INBOX_DATA_SOURCE_ID>"
+FROM "<Data source ID from settings.md>"
 WHERE Title LIKE '%<keyword>%';
 ```
 

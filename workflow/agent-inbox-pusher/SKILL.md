@@ -1,23 +1,19 @@
 ---
 name: "agent-inbox-pusher"
-version: "1.1"
-updated: "2026-11-09"
+version: "1.2"
+updated: "2026-11-10"
 description: "Push the current session's discussion into the Notion Agent Inbox, or print a pasteable handoff prompt for a new session. Notion mode: use when the user says \"push to inbox\", \"save to inbox\", or \"sync to inbox\". Paste mode: use when the user says \"provide a prompt\", \"handoff prompt\", or \"prompt for the new session\"; it prints a prompt in the conversation and writes nothing. Overlapping phrases such as \"handoff\", \"hand this off to [agent]\", \"new session\", \"switching devices\", \"let's talk later\": ask once which mode, do not guess."
 ---
 
-## Setup (fill in once)
+## Settings
 
-Replace the placeholder below with your own value (see README.md for how to find it). If a placeholder in the form `<YOUR_...>` still appears anywhere outside this table, stop and tell the user to finish Setup first. Do not guess values. Paste mode (Mode B) needs no Setup.
-
-| Placeholder | What to put there |
-|---|---|
-| `<YOUR_AGENT_INBOX_DATA_SOURCE_ID>` | The database's data source ID, in the form `collection://...` |
+Mode B (paste) needs no settings. Before running Mode A, read `settings.md` in the same folder as this file. It holds the **Data source ID** and, optionally, extra **Sensitive data** rules. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
 
 ## Overview
 
 Captures the current session's **discussion** and writes it as one structured entry in the Notion **Agent Inbox**, the single shared handoff database for all agents. It can also print a pasteable handoff prompt instead.
 
-Content ideas live in the same database with `Type = Content`. This skill is the only writer to the Agent Inbox. The database schema, status meanings, and roles are in `references/inbox-database.md`.
+Content ideas live in the same database with `Type = Content`. This skill is the only one that writes entries from a discussion. (`agent-inbox-screenshot-intake`, if you use it, writes entries from screenshots.) The database schema, status meanings, and roles are in `references/inbox-database.md`.
 
 Companion skill: `agent-inbox-loader` (reads entries back).
 
@@ -70,7 +66,7 @@ Extract:
 
 Before writing, run the sensitive data check below.
 
-**Sensitive data rule (edit to fit your own needs):** if the summary contains asset amounts, holdings, salaries, or account or identity document details, rewrite them as relative terms (percentages, ranges) or "see local file". This rule wins over completeness of the summary.
+**Sensitive data rule:** if the summary contains asset amounts, holdings, salaries, or account or identity document details, rewrite them as relative terms (percentages, ranges) or "see local file". Also apply any rules under **Sensitive data** in `settings.md`. This rule wins over completeness of the summary.
 
 ### Step 2: Determine Type and Handover To (verification)
 
@@ -103,7 +99,7 @@ Handover To: [role] (basis: ...)
 
 After confirmation, create the page with `notion-create-pages`:
 
-- Data source: `<YOUR_AGENT_INBOX_DATA_SOURCE_ID>`
+- Data source: the **Data source ID** in `settings.md`
 - Properties: Title / Date / Type / Handover To / Status = `Pending`
 - Page content:
 
@@ -159,7 +155,7 @@ Anything you are unsure was decided goes under "still under discussion", not "de
 
 ### Step B2: Sensitive data check
 
-Same check as Step 1: rewrite asset amounts, holdings, salaries, and account or identity document details as relative terms or "see local file".
+Same check as Step 1: rewrite asset amounts, holdings, salaries, and account or identity document details as relative terms or "see local file". If `settings.md` is readable, also apply its **Sensitive data** rules.
 
 ### Step B3: Output
 

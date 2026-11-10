@@ -1,6 +1,6 @@
 # agent-inbox-loader
 
-Version 1.0. Last synced 2026-11-09. Part of [skill-workbench](../../README.md). Unofficial, not affiliated with Anthropic.
+Version 1.1. Last synced 2026-11-10. Part of [skill-workbench](../../README.md). Unofficial, not affiliated with Anthropic.
 
 Loads one entry from a Notion "Agent Inbox" into your current agent session, so you can continue work that was started on a phone, in another agent's session, or earlier. It lists what is waiting for you, loads the one you pick, and marks it as picked up.
 
@@ -22,7 +22,7 @@ Do each step once.
 5. Open the "Active" view, open the view's menu, and choose "Copy link to view". You should have a URL that contains `?v=`.
 6. Ask your agent: "Fetch this database with the Notion tool and tell me its data source ID." You should get a string that starts with `collection://`.
 7. Copy this skill folder into your agent's skills directory. The directory depends on your tool.
-8. Open `SKILL.md` and replace the placeholders. `PLACEHOLDERS.md` at the repo root lists each one and where it is.
+8. In the skill folder, copy `settings.example.md` to `settings.md` and fill in the two values: the Active view URL from step 5 and the data source ID from step 6. Do not edit the example file. `PLACEHOLDERS.md` at the repo root lists every setting.
 9. In each agent's own instructions, state its role name. It must match one option of `Handover To`.
 
 ## Usage
@@ -44,10 +44,19 @@ List entries where Handover To is "<this agent's role>" and where Handover To is
 Show Title, Date, and Status only. Do not load full content unless I ask.
 ```
 
+## Updating
+
+Copy the new files over your existing skill folder. Do not delete the folder first, or your `settings.md` goes with it. `SKILL.md` and `settings.example.md` are safe to overwrite. If a new version needs a new setting, `CHANGELOG.md` says so, and the skill stops and names the missing one.
+
+## Running in the cloud or on a phone
+
+Some environments (scheduled cloud runs, phone apps) store only `SKILL.md` and cannot read `settings.md`. There, paste the contents of your filled-in `settings.md` at the end of `SKILL.md` under the heading `## Settings (pasted)`. The skill uses that block when it cannot read the file. An update replaces `SKILL.md`, so paste again after updating.
+
 ## Files
 
 | File | Purpose |
 |---|---|
+| `settings.example.md` | The values you fill in. Copy it to `settings.md` |
 | `SKILL.md` | The skill itself |
 | `references/inbox-database.md` | Database schema, status meanings, handling principles, roles |
 | `CHANGELOG.md` | Version history |

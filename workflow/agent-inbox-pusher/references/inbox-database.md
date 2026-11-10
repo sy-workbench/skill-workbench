@@ -1,6 +1,6 @@
 # Agent Inbox database reference
 
-This file describes the Notion database that `agent-inbox-loader` and `agent-inbox-pusher` read and write. Both skills ship an identical copy so each one works on its own.
+This file describes the Notion database that `agent-inbox-loader`, `agent-inbox-pusher` and `agent-inbox-screenshot-intake` read and write. Each skill ships an identical copy so each one works on its own.
 
 ## What the Agent Inbox is
 
@@ -15,6 +15,7 @@ One shared Notion database where agents and the human leave work for each other:
 | Type | Select | `Task` (has a concrete action) or `Content` (a topic that could become an article, not started) |
 | Handover To | Select | One option per agent role in your setup. Empty means unassigned |
 | Status | Status | `Pending`, `Picked Up`, `Done`, `Dropped`, `Deferred` |
+| Source | URL | Optional. A link to the original material. Only `agent-inbox-screenshot-intake` writes it (the original image's link) |
 | Last Edited | Last edited time | Built in. The skills never write it |
 
 Status groups: To-do = Pending. In progress = Picked Up. Complete = Done, Dropped, Deferred.
@@ -72,4 +73,4 @@ Suggested conventions:
 
 ## Sensitive data
 
-Entries live in Notion, outside your local machine. Before writing, rewrite sensitive details into relative terms (percentages, ranges) or "see local file": asset amounts, holdings, salaries, account or identity document details. This rule wins over completeness of the summary. Edit this section to match your own definition of sensitive.
+Entries live in Notion, outside your local machine. Before writing, rewrite sensitive details into relative terms (percentages, ranges) or "see local file": asset amounts, holdings, salaries, account or identity document details. This rule wins over completeness of the summary. To add your own rules, use the Sensitive data section of each skill's `settings.md`, not this file: an update replaces this file.
