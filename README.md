@@ -23,7 +23,6 @@ skill-workbench/
   README.md            this index
   README.zh-TW.md      Traditional Chinese index
   LICENSE              MIT
-  PLACEHOLDERS.md      every setting you must fill in, and where
   docs/                design notes (not needed to run a skill)
   workflow/            skills about moving work between agents and sessions
     <skill-name>/

@@ -23,9 +23,9 @@
 5. 取得兩個資料夾的 ID。在 Drive 打開資料夾，看網址列，`/folders/` 後面那串就是 ID。
 6. 請你的 agent 說：「用 Notion 工具讀這個資料庫，告訴我它的 data source ID。」應該會得到一串以 `collection://` 開頭的文字。
 7. 把這個 skill 資料夾複製到你的 agent 的 skills 目錄，目錄位置依工具而定。
-8. 在 skill 資料夾裡，把 `settings.example.md` 複製成 `settings.md`，填入必填的值：第 5 步的兩個資料夾 ID、第 6 步的 data source ID、你的時區。不要直接改 example 檔。repo 根目錄的 `PLACEHOLDERS.md` 列出所有設定項。
+8. 在 skill 資料夾裡，把 `settings.example.md` 複製成 `settings.md`，填入必填的值：第 5 步的兩個資料夾 ID、第 6 步的 data source ID、你的時區。不要直接改 example 檔。要確認沒有漏填，在 skill 資料夾執行 `grep -n '<YOUR_' settings.md`，應該什麼都不會印出來。
 9. 在 `settings.md` 把分派表改成你自己的 agent，名稱必須和 `Handover To` 欄位的選項一致。如果你的手機截圖檔名格式不同，也改一下檔名日期樣式；有自己的敏感資料規則，加在 Sensitive data 底下。
-10. 用一張無關緊要的截圖測試：丟進資料夾，對 agent 說「process the screenshot inbox」。這個 skill 的觸發詞是英文，中文說法通常也能觸發，但沒有測過；想固定用中文，可以在 `SKILL.md` 的 description 加上你的說法。應該會看到 Notion 多一筆條目，圖片已經在 `_archive`，名稱也改了。
+10. 用一張無關緊要的截圖測試：丟進資料夾，對 agent 說「process the screenshot inbox」。應該會看到 Notion 多一筆條目，圖片已經在 `_archive`，名稱也改了。這個 skill 的觸發詞是英文，中文說法通常也能觸發，但沒有測過；想固定用中文，可以在 `SKILL.md` 的 description 加上你的說法。
 
 ## 用法
 

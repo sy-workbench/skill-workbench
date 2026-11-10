@@ -23,7 +23,6 @@ skill-workbench/
   README.md            英文索引
   README.zh-TW.md      繁體中文索引
   LICENSE              MIT
-  PLACEHOLDERS.md      所有要你自己填的設定，以及位置
   docs/                設計說明（執行 skill 不需要）
   workflow/            處理 agent 與 session 之間交棒的 skill
     <skill 名稱>/

@@ -23,7 +23,7 @@ Do each step once.
 5. Get both folder IDs. Open each folder in Drive and look at the address bar: the ID is the text after `/folders/`.
 6. Ask your agent: "Fetch this database with the Notion tool and tell me its data source ID." You should get a string that starts with `collection://`.
 7. Copy this skill folder into your agent's skills directory. The directory depends on your tool.
-8. In the skill folder, copy `settings.example.md` to `settings.md` and fill in the required values: the two folder IDs from step 5, the data source ID from step 6, and your time zone. Do not edit the example file. `PLACEHOLDERS.md` at the repo root lists every setting.
+8. In the skill folder, copy `settings.example.md` to `settings.md` and fill in the required values: the two folder IDs from step 5, the data source ID from step 6, and your time zone. Do not edit the example file. To check that nothing is left empty, run `grep -n '<YOUR_' settings.md` in the skill folder. It should print nothing.
 9. In `settings.md`, edit the routing table so it names your own agents. The names must match options of the `Handover To` property. Edit the filename date patterns if your phone names screenshots differently, and add your own rules under Sensitive data if you have any.
 10. Test with one harmless screenshot: drop it in the folder and ask "process the screenshot inbox". You should see a new Notion entry, and the image should now be in `_archive` with a new name.
 

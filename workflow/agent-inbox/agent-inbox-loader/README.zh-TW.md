@@ -22,7 +22,7 @@
 5. 打開「Active」檢視，點檢視旁的選單，選「Copy link to view」。應該會得到一個含有 `?v=` 的網址。
 6. 請你的 agent 說：「用 Notion 工具讀這個資料庫，告訴我它的 data source ID。」應該會得到一串以 `collection://` 開頭的文字。
 7. 把這個 skill 資料夾複製到你的 agent 的 skills 目錄，目錄位置依工具而定。
-8. 在 skill 資料夾裡，把 `settings.example.md` 複製成 `settings.md`，填入兩個值：第 5 步的 Active 檢視網址、第 6 步的 data source ID。不要直接改 example 檔。repo 根目錄的 `PLACEHOLDERS.md` 列出所有設定項。
+8. 在 skill 資料夾裡，把 `settings.example.md` 複製成 `settings.md`，填入兩個值：第 5 步的 Active 檢視網址、第 6 步的 data source ID。不要直接改 example 檔。要確認沒有漏填，在 skill 資料夾執行 `grep -n '<YOUR_' settings.md`，應該什麼都不會印出來。
 9. 在每個 agent 自己的指令檔寫明它的角色名稱，必須和 `Handover To` 的某個選項一致。
 
 ## 用法

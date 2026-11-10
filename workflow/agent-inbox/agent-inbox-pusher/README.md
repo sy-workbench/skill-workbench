@@ -31,7 +31,7 @@ Do each step once.
 3. In the `Handover To` property, add one option per agent role you use. Add one more option for yourself.
 4. Ask your agent: "Fetch this database with the Notion tool and tell me its data source ID." You should get a string that starts with `collection://`.
 5. Copy this skill folder into your agent's skills directory. The directory depends on your tool.
-6. In the skill folder, copy `settings.example.md` to `settings.md` and fill in the data source ID from step 4. Add your own sensitive-data rules under Sensitive data if you have any. Do not edit the example file. `PLACEHOLDERS.md` at the repo root lists every setting.
+6. In the skill folder, copy `settings.example.md` to `settings.md` and fill in the data source ID from step 4. Add your own sensitive-data rules under Sensitive data if you have any. Do not edit the example file. To check that nothing is left empty, run `grep -n '<YOUR_' settings.md` in the skill folder. It should print nothing.
 7. In each agent's own instructions, state its role name. It must match one option of `Handover To`.
 
 ## Updating
