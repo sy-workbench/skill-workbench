@@ -1,8 +1,8 @@
 ---
 name: "agent-inbox-screenshot-intake"
-version: "1.1"
-updated: "2026-11-10"
-description: "Turn loose screenshots in a Google Drive folder into Notion Agent Inbox entries: read each image, group multi-shot captures of the same post, route it to an agent, create the entry, rename the file and move it to an _archive folder. Use when the user asks to process the screenshot inbox, or when run on a schedule."
+version: "1.2"
+updated: "2026-11-11"
+description: "Turn loose screenshots in a Google Drive folder into Notion Agent Inbox entries: read each image, group multi-shot captures of the same post, route it to an agent, create the entry, rename the file and move it to an _archive folder. Use when the user says \"process screenshots\" or \"process the screenshot inbox\", or when run on a schedule."
 ---
 
 ## Settings
@@ -19,7 +19,7 @@ Companion skills: `agent-inbox-loader` (reads entries) and `agent-inbox-pusher` 
 
 ## Input format
 
-- Trigger: asked by the user, or run on a schedule.
+- Trigger: the user says `process screenshots` or `process the screenshot inbox`, or a scheduled run. `read inbox` belongs to `agent-inbox-loader`, not this skill.
 - Source: the **root** of the Drive folder named by **Inbox folder ID** in `settings.md`.
 - Archive: the `_archive` folder named by **Archive folder ID** in `settings.md`.
 - Target: the Notion Agent Inbox, the data source named by **Data source ID** in `settings.md`.
@@ -55,7 +55,8 @@ If you can write files, keep a run log at `/tmp/screenshot_intake_YYYYMMDD.log` 
    - `Source`: the original image's view URL. For a group, the first image's URL.
    - `Date`: the day this run happened.
    - Body: Background (the original link plus a one-sentence summary) and Next Step (a suggestion). Problem and Resolution can be left out for passively collected material.
-   - For a group, also: list the number of images and every image link with its page number (for example `1/13 https://...`); summarise the whole post, not just the first image; and state which pages are missing when the page numbers have gaps.
+   - For a group, also: list the number of images and every image link with its page number (for example `1/13 https://...`), and summarise the whole post, not just the first image.
+   - Do not mention missing pages (for example "only 5/6 received"). People often keep only the pages they care about, so gaps are usually on purpose, and noting them makes the receiving agent ask needless questions. Do not put a single image's page number in the title or summary either.
 8. **Rename and move.** For each image, one `update_file` call changes the title and the parent together:
    - Title: `YYYYMMDD_topic.ext`. Find the date in this order and note which source you used:
      1. A filename date pattern from `settings.md` (or the defaults above).
@@ -63,6 +64,7 @@ If you can write files, keep a run log at `/tmp/screenshot_intake_YYYYMMDD.log` 
      3. The Drive creation time.
      Convert timestamps to the **Time zone** in `settings.md` before taking the date. If you had to use source 2 or 3, add one line to the Notion entry saying so.
    - For a group, every image is renamed `YYYYMMDD_topic_NNofMM.ext` with the post's own page numbers (zero-pad when the total has two digits). Use the first image's date for the whole group. If pages are missing, keep the original page numbers; do not renumber.
+   - A single image that is clearly one page of a multi-page post may carry that page number in its filename (for example `_5of6`), but not in the entry.
    - Parent: set to the **Archive folder ID** from `settings.md`.
    - The file ID does not change when a file moves, so the view URL stays valid and the `Source` link keeps working.
 9. **Notify (optional).** If you have a way to notify the user, send one short message only when some entries need a manual assignment (for example "5 entries, 2 need assigning"). Stay silent when everything was routed. If you have no notification channel, put the same line in the run summary.
@@ -72,7 +74,8 @@ If you can write files, keep a run log at `/tmp/screenshot_intake_YYYYMMDD.log` 
 
 - **Empty folder:** stop. No entries, no notification.
 - **Unreadable image (vision also fails):** do not rename, move, or create an entry. Leave it in the folder so the user can look at the original. Renaming it would bury it.
-- **Unreadable image inside a group:** leave that image alone, process the rest as one entry, and say in the body which page is missing.
+- **Unreadable image inside a group:** leave that image alone, process the rest as one entry, and say in the body which page was left in the folder because it could not be read. This is different from pages the user skipped on purpose, which are not mentioned.
+- **Page numbers with gaps:** treat them as a deliberate selection. Process what is there; do not note the gap or ask about it.
 - **Empty or tiny `contentSnippet`:** do not wait or retry. Dark-mode and low-contrast screenshots can stay empty indefinitely. Download the image and use vision.
 - **Readable but unsure who should take it:** still rename, move and create the entry, with `Handover To` empty.
 - **Unsure whether images belong together:** do not merge.

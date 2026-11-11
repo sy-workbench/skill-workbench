@@ -1,13 +1,13 @@
 ---
 name: "agent-inbox-pusher"
-version: "1.2"
-updated: "2026-11-10"
+version: "1.3"
+updated: "2026-11-11"
 description: "Push the current session's discussion into the Notion Agent Inbox, or print a pasteable handoff prompt for a new session. Notion mode: use when the user says \"push to inbox\", \"save to inbox\", or \"sync to inbox\". Paste mode: use when the user says \"provide a prompt\", \"handoff prompt\", or \"prompt for the new session\"; it prints a prompt in the conversation and writes nothing. Overlapping phrases such as \"handoff\", \"hand this off to [agent]\", \"new session\", \"switching devices\", \"let's talk later\": ask once which mode, do not guess."
 ---
 
 ## Settings
 
-Mode B (paste) needs no settings. Before running Mode A, read `settings.md` in the same folder as this file. It holds the **Data source ID** and, optionally, extra **Sensitive data** rules. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
+Mode B (paste) needs no settings. Before running Mode A, read `settings.md` in the same folder as this file. It holds the **Data source ID** and, optionally, extra **Sensitive data** rules. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (agent-inbox README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
 
 ## Overview
 
@@ -121,7 +121,7 @@ Then report:
 
 ```
 Saved to the Agent Inbox: [Title] (Type: [x], Handover To: [y])
-In [y]'s session, say "read inbox: [Title]" to pick it up.
+In [y]'s session, say "read notion inbox: [Title]" to pick it up.
 ```
 
 ### Edge Cases

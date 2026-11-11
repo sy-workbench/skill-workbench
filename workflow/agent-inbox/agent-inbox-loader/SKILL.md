@@ -1,13 +1,13 @@
 ---
 name: "agent-inbox-loader"
-version: "1.1"
-updated: "2026-11-10"
-description: "Load a Notion Agent Inbox entry's full content into the current session. Use when the user says \"read inbox\", \"load inbox\", \"fetch inbox\", or names a specific inbox entry they want to pick up. Also trigger when the user says something like \"let's continue the [topic] discussion\" and the context likely lives in the Agent Inbox. If no title is given, list the candidates and let the user choose."
+version: "1.2"
+updated: "2026-11-11"
+description: "Load a Notion Agent Inbox entry's full content into the current session. Use when the user says \"read inbox\" or \"read notion inbox\", or names a specific inbox entry they want to pick up. Also trigger when the user says something like \"let's continue the [topic] discussion\" and the context likely lives in the Agent Inbox. If no title is given, list entries assigned to this agent plus unassigned ones and ask which one; if exactly one is assigned to this agent, load it directly."
 ---
 
 ## Settings
 
-Before anything else, read `settings.md` in the same folder as this file. It holds the **Active view URL** and the **Data source ID**. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
+Before anything else, read `settings.md` in the same folder as this file. It holds the **Active view URL** and the **Data source ID**. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (agent-inbox README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
 
 Each agent also needs a role name that matches one option of the `Handover To` property. Define it in that agent's own instructions, not in this file or in settings.
 
@@ -25,7 +25,7 @@ Companion skill: `agent-inbox-pusher` (writes entries).
 
 The user triggers with one of:
 
-- A phrase only: `read inbox` / `load inbox` / `fetch inbox`
+- A phrase only: `read inbox` / `read notion inbox`
 - A phrase plus a title: `read inbox: Weekly planning rework`
 - An implicit reference: `let's continue the connector discussion`
 
@@ -55,14 +55,18 @@ WHERE Title LIKE '%<keyword>%';
 
 Zero or multiple matches there: fall through to the listing below.
 
-**If no title is given**, list from the view result in two groups, in this order:
+**If no title is given**, split the view result into two groups:
 
-1. Mine: `Handover To` equals your own role name
+1. Mine: `Handover To` equals your own role name (Pending or Picked Up, i.e. waiting for you to handle)
 2. Unassigned: `Handover To` is empty and Status = Pending
 
-Present both groups with Title / Date / Status only. Do not expand any page content at this stage. Ask which one to load.
+Then:
 
-Do not silently truncate the list. If a group is long, report the count rather than dropping the oldest entries.
+- Mine has exactly one entry: load it directly (go to Step 2, which sets Picked Up). Do not ask first. In the same reply, list Unassigned with Title / Date / Status, if there are any.
+- Mine has two or more: list both groups with Title / Date / Status only, newest first, and ask which one to handle first.
+- Mine is empty: list Unassigned (if any) and ask. Loading an unassigned entry does not claim it (see Step 3).
+
+Do not expand any page content when listing. Do not silently truncate the list. If a group is long, report the count rather than dropping the oldest entries.
 
 SQL alias rule (applies to any SQL that selects the date column): write `"date:Date:start" AS d`. Without an alias, rows whose Date is empty can be silently dropped from the result.
 
@@ -87,7 +91,7 @@ Then ask what to do next. Do not start executing the Next Step without confirmat
 
 ### Edge Cases
 
-- **Title matches nothing**: do not guess. Fall back to listing active entries and ask.
+- **Title matches nothing**: do not guess. Fall back to the no-title listing above.
 - **Multiple matches**: list them with Date and Status, ask which one.
 - **Entry is already Done / Dropped / Deferred**: load it, but say so up front. The user may be looking at a stale reference.
 - **Entry contradicts the current project state**: flag the conflict rather than silently following the entry. Inbox content is a snapshot from when it was written.

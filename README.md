@@ -1,51 +1,36 @@
 # skill-workbench
 
-Agent skills from my own multi-agent setup, cleaned up so you can reuse them. Each skill is a folder with a `SKILL.md` that an AI agent can load, plus a README that explains setup.
-
-This is an unofficial personal project. It is not affiliated with, endorsed by, or sponsored by Anthropic. "Claude" is a trademark of Anthropic.
+These are the skills I use with my own AI agents, cleaned up so you can use them too. To start, pick a category below, open the README of a skill you like, and see what you need to prepare.
 
 Traditional Chinese: [README.zh-TW.md](README.zh-TW.md)
 
-## Skills
+## Categories
 
-| Skill | Category | Version | What it does |
-|---|---|---|---|
-| [agent-inbox-loader](workflow/agent-inbox-loader/README.md) | workflow | 1.1 | Loads one entry from a shared Notion "Agent Inbox" into the current session, so you can continue work started elsewhere |
-| [agent-inbox-pusher](workflow/agent-inbox-pusher/README.md) | workflow | 1.2 | Saves the current discussion as an Agent Inbox entry, or prints a pasteable handoff prompt for a new session |
-| [agent-inbox-screenshot-intake](workflow/agent-inbox-screenshot-intake/README.md) | workflow | 1.1 | Turns loose screenshots in a Google Drive folder into Notion Agent Inbox entries, groups multi-shot captures, routes them to agents, and archives the originals |
+### workflow
 
-More skills will be added by category as they are cleaned up.
+When I discuss a topic with AI, I often switch between agents, sessions and devices (for example, phone and laptop). The skills in this category are small tools that make that switching more efficient.
 
-## Layout
+For example, picking up a discussion in a different agent, or sending a phone screenshot to the agent that should handle it.
 
-```
-skill-workbench/
-  README.md            this index
-  README.zh-TW.md      Traditional Chinese index
-  LICENSE              MIT
-  docs/                design notes (not needed to run a skill)
-  workflow/            skills about moving work between agents and sessions
-    <skill-name>/
-      SKILL.md         the skill
-      settings.example.md  the values you fill in (copy to settings.md)
-      README.md        setup and usage
-      README.zh-TW.md  Traditional Chinese README
-      CHANGELOG.md     version history
-      references/      supporting files the skill reads
-```
+Browse them in [workflow/](workflow/).
 
-Each skill folder is self-contained. Copy one folder and it works on its own. Shared reference files are duplicated on purpose, so you never need to install anything else.
+I will add more categories as I clean up more skills. Design notes are in [docs/](docs/). They are only for reference and do not affect how you use the skills.
 
 ## How to use a skill
 
-1. Open the skill's README and follow its Setup section.
-2. Copy the skill folder into your agent's skills directory.
-3. Copy `settings.example.md` to `settings.md` in the skill folder and fill it in. If a value is missing, the skill stops and tells you. You never edit `SKILL.md`, so updates can replace it.
+Every skill README lists what you need to prepare. If a skill is part of a group, the group README has it. In general, it comes down to two steps:
+
+1. Copy the skill folder into the folder where you keep your skills.
+2. Copy `settings.example.md` to `settings.md` and fill in your own values. If you miss one, the skill stops and tells you which when it runs.
+
+`SKILL.md` has no placeholders to replace, so you can overwrite it when a new version comes out, unless you have changed it yourself.
+
+Some environments, such as scheduled cloud runs and phone apps, cannot read `settings.md`. There, paste your settings at the end of `SKILL.md`. The README explains how. Overwriting `SKILL.md` on update erases what you pasted, so paste it again.
 
 ## Versions
 
-Every skill has its own version (major.minor) and its own `CHANGELOG.md`. A small fix bumps the minor number. A change in behavior bumps the major number. The README of each skill shows the version and the date it was last synced.
+Each skill has its own version and its own `CHANGELOG.md`, which records what changed in each version. A small fix raises the number after the dot. A major change in behavior raises the number before it. Each skill README shows the current version and the date it was last updated.
 
-## License
+## License and notes
 
-MIT. See [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE). This is my personal project and is not affiliated with any company.

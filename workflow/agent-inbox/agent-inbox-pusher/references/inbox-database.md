@@ -43,7 +43,7 @@ What happens next, and where it is stuck.
 - Pending: the responsible agent has not read it yet (this includes unassigned entries).
 - Picked Up: the responsible agent has read it. Set this as soon as you load an entry assigned to you, whatever you do next.
 - Done / Dropped / Deferred: the action named in the entry is finished, or follow-up continues in another session, or the idea was dropped, or it was shelved on purpose (Deferred).
-- Pending and Picked Up both show up every time someone says "read inbox".
+- Pending and Picked Up both show up every time someone says "read notion inbox".
 
 ## Handling principles (the floor for every agent)
 

@@ -1,6 +1,6 @@
 # Settings for agent-inbox-screenshot-intake
 
-How to use this file: copy it, rename the copy to `settings.md` (same folder), and fill in the copy. Do not edit this example, so that updating the skill can replace it safely. To find each value, see the README, section "Setup". If your environment cannot read extra files, see the README, section "Running in the cloud or on a phone".
+How to use this file: copy it, rename the copy to `settings.md` (same folder), and fill in the copy. Do not edit this example, so that updating the skill can replace it safely. To find each value, see the README, section "Setup". If your environment cannot read extra files, see the README, section "Upgrading, and running in the cloud or on a phone".
 
 ## Required
 
