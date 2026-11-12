@@ -1,7 +1,7 @@
 ---
 name: "agent-inbox-screenshot-intake"
 version: "1.2"
-updated: "2026-11-11"
+updated: "2026-11-12"
 description: "Turn loose screenshots in a Google Drive folder into Notion Agent Inbox entries: read each image, group multi-shot captures of the same post, route it to an agent, create the entry, rename the file and move it to an _archive folder. Use when the user says \"process screenshots\" or \"process the screenshot inbox\", or when run on a schedule."
 ---
 
@@ -32,7 +32,7 @@ The **Routing table** in `settings.md` says which agent should receive which kin
 - If the table is empty, or you cannot tell which row fits, leave `Handover To` empty. Never guess the closest match.
 - If a row names an agent that is not an option in the database's `Handover To` property, leave `Handover To` empty and mention it in the run summary.
 
-**Filename date patterns** in `settings.md` are used in step 8. If that entry is missing, use these defaults: `Screenshot_YYYYMMDD_...`, `IMG_YYYYMMDD_...`, `YYYY-MM-DD ...`.
+**Filename date patterns** in `settings.md` are used in step 7. If that entry is missing, use these defaults: `Screenshot_YYYYMMDD_...`, `IMG_YYYYMMDD_...`, `YYYY-MM-DD ...`.
 
 ## Workflow
 
@@ -47,27 +47,29 @@ If you can write files, keep a run log at `/tmp/screenshot_intake_YYYYMMDD.log` 
 4. **Group multi-shot captures.** Put screenshots of the same post or document into one group. Look at several signals together: same author or account and topic, page numbers (3/13, 2/4), capture times a few minutes apart, content that continues from one image to the next. If you are not sure, do not merge. A single image is a group of one.
 5. **Route.** Use the Routing table in `settings.md`. Fill `Handover To` only when you are confident.
 6. **Privacy check (before writing; this rule wins over completeness of the summary).** If an image shows exact financial amounts (balances, holdings, salary), account details, policy numbers, or identity document details, write the title and body in relative terms (percentages, ranges) or "see original image". Do not copy the exact figures. Also apply any rules under **Sensitive data** in `settings.md`.
-7. **Create the Notion entry.** One entry per image or per group, in the data source above:
+7. **Work out the screenshot date.** For each image, find the date in this order and note which source you used:
+   1. A filename date pattern from `settings.md` (or the defaults above).
+   2. The Drive creation time (`createdTime`), converted to the **Time zone** in `settings.md`. The Drive connector does not return a capture time.
+   For a group, use the first image's date for the whole group.
+8. **Create the Notion entry.** One entry per image or per group, in the data source above:
    - `Title`: a plain description of the content in 3 to 6 words. For a group, name the whole post and leave out page numbers.
    - `Type`: `Content` only when the image is clearly source material for writing something. Everything else is `Task`. If unsure, `Task`.
    - `Handover To`: from step 5, or empty.
    - `Status`: `Pending`.
    - `Source`: the original image's view URL. For a group, the first image's URL.
-   - `Date`: the day this run happened.
+   - `Date`: the day this run happened, in the **Time zone** from `settings.md`.
    - Body: Background (the original link plus a one-sentence summary) and Next Step (a suggestion). Problem and Resolution can be left out for passively collected material.
+   - If the date in step 7 came from the Drive creation time (source 2), add one line to the body saying so.
    - For a group, also: list the number of images and every image link with its page number (for example `1/13 https://...`), and summarise the whole post, not just the first image.
    - Do not mention missing pages (for example "only 5/6 received"). People often keep only the pages they care about, so gaps are usually on purpose, and noting them makes the receiving agent ask needless questions. Do not put a single image's page number in the title or summary either.
-8. **Rename and move.** For each image, one `update_file` call changes the title and the parent together:
-   - Title: `YYYYMMDD_topic.ext`. Find the date in this order and note which source you used:
-     1. A filename date pattern from `settings.md` (or the defaults above).
-     2. The Drive creation time (`createdTime`), converted to the **Time zone** in `settings.md`. The Drive connector does not return a capture time.
-     If you had to use source 2, add one line to the Notion entry saying so.
+9. **Rename and move.** For each image, one `update_file` call changes the title and the parent together:
+   - Title: `YYYYMMDD_topic.ext`, with the date from step 7.
    - For a group, every image is renamed `YYYYMMDD_topic_NNofMM.ext` with the post's own page numbers (zero-pad when the total has two digits). Use the first image's date for the whole group. If pages are missing, keep the original page numbers; do not renumber.
    - A single image that is clearly one page of a multi-page post may carry that page number in its filename (for example `_5of6`), but not in the entry.
    - Parent: set to the **Archive folder ID** from `settings.md`.
    - The file ID does not change when a file moves, so the view URL stays valid and the `Source` link keeps working.
-9. **Notify (optional).** If you have a way to notify the user, send one short message only when some entries need a manual assignment (for example "5 entries, 2 need assigning"). Stay silent when everything was routed. If you have no notification channel, put the same line in the run summary.
-10. **Finish.** Log the number of images processed, groups formed, routing counts, entries left unassigned, and images left in the folder because they could not be read.
+10. **Notify (optional).** If you have a way to notify the user, send one short message only when some entries need a manual assignment (for example "5 entries, 2 need assigning"). Stay silent when everything was routed. If you have no notification channel, put the same line in the run summary.
+11. **Finish.** Log the number of images processed, groups formed, routing counts, entries left unassigned, and images left in the folder because they could not be read.
 
 ### Edge Cases
 

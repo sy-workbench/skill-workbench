@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2 (2026-11-11)
+## 1.2 (2026-11-12)
 - Initial public release.
 - Reads loose screenshots from the root of a Google Drive folder, understands each one (Google's OCR text first, vision only when needed), and creates one Notion Agent Inbox entry per image.
 - Groups screenshots of the same post or document into a single entry, with page numbers.

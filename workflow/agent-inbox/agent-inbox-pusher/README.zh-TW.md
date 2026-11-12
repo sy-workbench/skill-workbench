@@ -1,6 +1,6 @@
 # agent-inbox-pusher
 
-版本 1.3，最後更新 2026-11-11。屬於 [agent-inbox](../README.zh-TW.md)。
+版本 1.3，最後更新 2026-11-12。屬於 [agent-inbox](../README.zh-TW.md)。
 
 把目前 session 的討論存成 Notion Agent Inbox 裡的一條事項，讓另一個 agent（或換了裝置的你）之後能接手。也可以不經過 Notion，直接產生一段 prompt，貼進新的 session（模式 B）。它做什麼、要說哪些觸發詞、需求、設定、升級，以及在雲端或手機上執行，都寫在 [agent-inbox README](../README.zh-TW.md)。
 

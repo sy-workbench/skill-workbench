@@ -22,7 +22,7 @@ Status groups: To-do = Pending. In progress = Picked Up. Complete = Done, Droppe
 
 ## Entry body
 
-Every entry has the same four sections:
+Every entry has the same four sections. Entries that `agent-inbox-screenshot-intake` creates from screenshots may leave out Problem and Resolution:
 
 ```
 ## Background
@@ -43,7 +43,7 @@ What happens next, and where it is stuck.
 - Pending: the responsible agent has not read it yet (this includes unassigned entries).
 - Picked Up: the responsible agent has read it. Set this as soon as you load an entry assigned to you, whatever you do next.
 - Done / Dropped / Deferred: the action named in the entry is finished, or follow-up continues in another session, or the idea was dropped, or it was shelved on purpose (Deferred).
-- Pending and Picked Up both show up every time someone says "read notion inbox".
+- Pending and Picked Up both show up every time someone says "read inbox".
 
 ## Handling principles (the floor for every agent)
 
@@ -62,14 +62,14 @@ Suggested conventions:
 
 - Keep one option for the human (for example `Me`) for work only the human can do: placing real orders, manual configuration, contacting other people.
 - Assigning is the human's call. If you cannot tell who should take an entry, leave `Handover To` empty. Do not guess the closest match.
-- Never use an empty `Handover To` to mean "I could not decide". Empty means "not yet assigned", and the two meanings must stay separate.
+- An empty `Handover To` means "not yet assigned". `agent-inbox-loader` lists unassigned entries, so the human can assign them when reading the Inbox.
 
 ## Edge cases
 
 - Unsure who should take it: leave it empty and let the human assign it.
 - A topic spans two agents: write two entries, each with its own `Handover To`. Do not write one entry and make the receiver split it.
 - Nobody picks an entry up: it stays `Pending`. A periodic review (by you or a designated agent) should surface it. The agent that wrote it does not chase.
-- A discussion has not converged: it does not belong in the Inbox. Write it down once it can be stated as a single decision.
+- A discussion has not converged: it can still be written. Leave Resolution empty, and write Next Step clearly: what comes next and where it is stuck.
 
 ## Sensitive data
 

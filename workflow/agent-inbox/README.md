@@ -29,7 +29,7 @@ Trigger phrases:
 | Get a prompt to paste into a new session (Mode B) | `provide a prompt` / `handoff prompt` / `prompt for the new session` | agent-inbox-pusher |
 | Read what is waiting for this agent | `read inbox` / `read notion inbox` | agent-inbox-loader |
 
-Vague phrases such as `handoff`, `new session` or `let's talk about this later` fit both modes, so the pusher asks once: paste a prompt, or write it to the Inbox.
+Vague phrases such as `handoff`, `new session` or `let's talk later` fit both modes, so the pusher asks once: paste a prompt, or write it to the Inbox.
 
 ## Requirements
 

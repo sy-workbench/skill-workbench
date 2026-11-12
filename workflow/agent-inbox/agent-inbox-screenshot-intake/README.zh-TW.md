@@ -1,6 +1,6 @@
 # agent-inbox-screenshot-intake
 
-版本 1.2，最後更新 2026-11-11。屬於 [agent-inbox](../README.zh-TW.md) 的附加 skill。
+版本 1.2，最後更新 2026-11-12。屬於 [agent-inbox](../README.zh-TW.md) 的附加 skill。
 
 常常在手機上看到想要等等處理的內容或東西，截個圖，然後就忘了。這個 skill 是負責處理這些截圖的，它會讀 Google Drive 某個資料夾裡零散的截圖，判斷每張在講什麼，在 Notion Agent Inbox 建一條事項，分派給該處理的 agent，再把原圖重新命名成易懂的檔名，搬進 `_archive`。同一篇貼文分成好幾張截圖的，也會合成一條事項。
 

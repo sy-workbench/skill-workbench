@@ -1,7 +1,7 @@
 ---
 name: "agent-inbox-pusher"
 version: "1.3"
-updated: "2026-11-11"
+updated: "2026-11-12"
 description: "Push the current session's discussion into the Notion Agent Inbox, or print a pasteable handoff prompt for a new session. Notion mode: use when the user says \"push to inbox\", \"save to inbox\", or \"sync to inbox\". Paste mode: use when the user says \"provide a prompt\", \"handoff prompt\", or \"prompt for the new session\"; it prints a prompt in the conversation and writes nothing. Overlapping phrases such as \"handoff\", \"hand this off to [agent]\", \"new session\", \"switching devices\", \"let's talk later\": ask once which mode, do not guess."
 ---
 
@@ -44,8 +44,8 @@ The user triggers with one of:
 **Overlapping phrases: always ask once first**
 
 - `handoff` / `hand this off to [agent]`
-- `new session` / `switching sessions`
-- `I'll continue on another device` / `let's talk about this later`
+- `new session`
+- `switching devices` / `let's talk later`
 
 Ask: "Paste a prompt or write it to the Inbox?" Do not guess. If the user picks Mode A, put the named agent in `Handover To`. If the user picks Mode B, ignore the target agent, because the user pastes the prompt themselves.
 
@@ -70,7 +70,7 @@ Before writing, run the sensitive data check below.
 
 ### Step 2: Determine Type and Handover To (verification)
 
-Both fields need a clear basis. Do not leave either empty to avoid deciding. An empty `Handover To` has its own meaning in the schema (not yet assigned), and using it for "I could not tell" would mix the two.
+Both fields need a clear basis. `Type` is never left empty. `Handover To` may be left empty when you cannot tell who should take the entry: empty means unassigned, and `agent-inbox-loader` lists unassigned entries, so the user can assign them later.
 
 Decide each field separately:
 
@@ -78,7 +78,7 @@ Decide each field separately:
 |---|---|
 | The user said it ("this is a content idea", "hand it to the writer") | Write it directly |
 | The user did not say it, but the discussion points to exactly one answer | Write it, and state the basis when you report, so the user can overrule it at a glance |
-| You cannot tell, or two or more answers are equally reasonable | Stop and ask. Do not guess and do not leave it empty |
+| You cannot tell, or two or more answers are equally reasonable | `Type`: stop and ask. `Handover To`: leave it empty and say so in the draft. Do not guess |
 
 Values:
 
@@ -93,7 +93,7 @@ Show the user what you are about to write, and write only after they confirm:
 About to save to the Agent Inbox:
 Title: [title]
 Type: [Task / Content] (basis: ...)
-Handover To: [role] (basis: ...)
+Handover To: [role, or unassigned] (basis: ...)
 [four-section summary]
 ```
 
@@ -121,18 +121,20 @@ Then report:
 
 ```
 Saved to the Agent Inbox: [Title] (Type: [x], Handover To: [y])
-In [y]'s session, say "read notion inbox: [Title]" to pick it up.
+In [y]'s session, say "read inbox: [Title]" to pick it up.
 ```
+
+If `Handover To` is empty, say instead that the entry is unassigned and will be listed when any agent runs `read inbox`.
 
 ### Edge Cases
 
 - **The content is a finished deliverable**: do not use this skill. Tell the user the Inbox is for work still to be done.
 - **The discussion has not converged**: leave Resolution empty, but write Next Step clearly: what comes next and where it is stuck.
 - **One session covered several topics**: ask which one to push, or propose several entries. Do not put unrelated topics into one entry.
-- **Updating an existing entry instead of adding one**: check for an entry on the same topic first. If there is one, update it with `notion-update-page`. Do not create a duplicate.
+- **Updating an existing entry instead of adding one**: do this check only when the user says they want to update an existing entry. Run one SQL query on Title with `notion-query-data-sources`: `SELECT url, Title, Status FROM "<Data source ID from settings.md>" WHERE Title LIKE '%<keyword>%'`. If there is a match, update that entry with `notion-update-page` and do not create a duplicate. If there is none, tell the user and create a new entry.
 - **Handing over to another agent**: change `Handover To` and set `Status` back to `Pending`. A handover is an event, not a state. If the entry stays at `Picked Up`, nobody can tell who holds the ball.
 - **The content does not match what the user said** (for example they said content idea, but it is really a to-do): decide `Type` from the content, and say in your report that you changed it so the user can overrule you.
-- **Handover To cannot be inferred at all**: ask. Offer two or three candidates with reasons. Do not default to the human.
+- **Handover To cannot be inferred at all**: leave it empty and say so in the draft, so the user can name an agent before confirming. Do not default to the human.
 
 ## Workflow: Mode B (pasteable prompt)
 

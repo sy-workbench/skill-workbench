@@ -1,7 +1,7 @@
 ---
 name: "agent-inbox-loader"
 version: "1.2"
-updated: "2026-11-11"
+updated: "2026-11-12"
 description: "Load a Notion Agent Inbox entry's full content into the current session. Use when the user says \"read inbox\" or \"read notion inbox\", or names a specific inbox entry they want to pick up. Also trigger when the user says something like \"let's continue the [topic] discussion\" and the context likely lives in the Agent Inbox. If no title is given, list entries assigned to this agent plus unassigned ones and ask which one; if exactly one is assigned to this agent, load it directly."
 ---
 
@@ -53,7 +53,7 @@ FROM "<Data source ID from settings.md>"
 WHERE Title LIKE '%<keyword>%';
 ```
 
-Zero or multiple matches there: fall through to the listing below.
+Zero matches there: fall through to the listing below, but always list and ask. Do not apply the "exactly one entry: load it directly" rule, because the user named a different entry. Multiple matches there: list them with Date and Status, and ask which one.
 
 **If no title is given**, split the view result into two groups:
 
@@ -85,13 +85,13 @@ Then ask what to do next. Do not start executing the Next Step without confirmat
 
 - Listing candidates or showing summaries: do not change `Status`.
 - Loading the full content of an entry whose `Handover To` is you: set `Status = Picked Up` right away, whether or not you go on to act on it.
-- `Handover To` empty: do not claim it on your own initiative. Assignment is the human's call. Only when the human explicitly asks you to handle it, set `Handover To` to your own role name.
+- `Handover To` empty: do not claim it on your own initiative. Assignment is the human's call. Only when the human explicitly asks you to handle it, set `Handover To` to your own role name and `Status = Picked Up` in the same update.
 - Entry assigned to another agent: do not claim or change it.
 - When the action is finished, close the entry following the handling principles in `references/inbox-database.md`: set Done / Dropped / Deferred and write Resolution in the same update.
 
 ### Edge Cases
 
-- **Title matches nothing**: do not guess. Fall back to the no-title listing above.
+- **Title matches nothing**: do not guess. Fall back to the no-title listing above. List and ask even if exactly one entry is assigned to you; do not load it directly.
 - **Multiple matches**: list them with Date and Status, ask which one.
 - **Entry is already Done / Dropped / Deferred**: load it, but say so up front. The user may be looking at a stale reference.
 - **Entry contradicts the current project state**: flag the conflict rather than silently following the entry. Inbox content is a snapshot from when it was written.

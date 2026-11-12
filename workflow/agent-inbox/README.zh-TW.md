@@ -29,7 +29,7 @@ agent-inbox-pusher 還有另一種用法，叫模式 B：不經過 Notion，直�
 | 產生一段 prompt，貼進新的 session（模式 B） | `provide a prompt` / `handoff prompt` / `prompt for the new session` | agent-inbox-pusher |
 | 讀取等這個 agent 處理的事項 | `read inbox` / `read notion inbox` | agent-inbox-loader |
 
-像 `handoff`、`new session`、`let's talk about this later` 這類說法，兩種模式都說得通，pusher 會先問一次：要產生 prompt，還是存進 Inbox。
+像 `handoff`、`new session`、`let's talk later` 這類說法，兩種模式都說得通，pusher 會先問一次：要產生 prompt，還是存進 Inbox。
 
 ## 需求
 

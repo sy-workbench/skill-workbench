@@ -1,6 +1,6 @@
 # agent-inbox-loader
 
-版本 1.2，最後更新 2026-11-11。屬於 [agent-inbox](../README.zh-TW.md)。
+版本 1.2，最後更新 2026-11-12。屬於 [agent-inbox](../README.zh-TW.md)。
 
 把 Notion Agent Inbox 裡的一條事項讀進目前的 agent session，讓你接著做在別處開始的工作。它做什麼、要說哪些觸發詞、需求、設定、升級，以及在雲端或手機上執行，都寫在 [agent-inbox README](../README.zh-TW.md)。
 

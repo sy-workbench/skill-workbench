@@ -1,6 +1,6 @@
 # agent-inbox-screenshot-intake
 
-Version 1.2. Last updated 2026-11-11. An add-on to [agent-inbox](../README.md).
+Version 1.2. Last updated 2026-11-12. An add-on to [agent-inbox](../README.md).
 
 You often see something on your phone that you want to deal with later, take a screenshot, and then forget about it. This skill handles those screenshots. It reads the loose screenshots in a Google Drive folder, works out what each one is about, creates an entry in your Notion Agent Inbox, assigns it to the agent that should handle it, then renames the original image to an easy-to-read name and moves it into `_archive`. If several screenshots belong to the same post, they become one entry.
 
