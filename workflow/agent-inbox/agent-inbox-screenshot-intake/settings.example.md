@@ -1,12 +1,17 @@
 # Settings for agent-inbox-screenshot-intake
 
-How to use this file: copy it, rename the copy to `settings.md` (same folder), and fill in the copy. Do not edit this example, so that updating the skill can replace it safely. To find each value, see the README, section "Setup". If your environment cannot read extra files, see the README, section "Upgrading, and running in the cloud or on a phone".
+How to use this file: copy it, rename the copy to `settings.md` (same folder), and fill in the copy. Do not edit this example, so that updating the skill can replace it safely. This skill's README in the skill-workbench repo has the full setup.
 
 ## Required
 
+Folder IDs (in Google Drive, open the folder; the ID is the text after `/folders/` in the address bar):
 Inbox folder ID: <YOUR_INBOX_FOLDER_ID>
 Archive folder ID: <YOUR_ARCHIVE_FOLDER_ID>
+
+Data source ID (your Agent Inbox database's ID; it starts with `collection://`):
 Data source ID: <YOUR_AGENT_INBOX_DATA_SOURCE_ID>
+
+Time zone (IANA name, for example `Europe/London`):
 Time zone: <YOUR_TIMEZONE>
 
 ## Routing table

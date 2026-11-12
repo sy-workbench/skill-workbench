@@ -12,7 +12,7 @@ When I discuss a topic with AI, I often switch between agents, sessions and devi
 
 For example, picking up a discussion in a different agent, or sending a phone screenshot to the agent that should handle it.
 
-Browse them in [workflow/](workflow/).
+Start with [agent-inbox](workflow/agent-inbox/README.md).
 
 I will add more categories as I clean up more skills. Design notes are in [docs/](docs/). They are only for reference and do not affect how you use the skills.
 

@@ -7,13 +7,13 @@ description: "Turn loose screenshots in a Google Drive folder into Notion Agent 
 
 ## Settings
 
-Before anything else, read `settings.md` in the same folder as this file. It holds the **Inbox folder ID**, **Archive folder ID**, **Data source ID**, **Time zone**, the **Routing table**, and optionally **Filename date patterns** and **Sensitive data** rules. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
+Before anything else, read `settings.md` in the same folder as this file. It holds the **Inbox folder ID**, **Archive folder ID**, **Data source ID**, **Time zone**, the **Routing table**, and optionally **Filename date patterns** and **Sensitive data** rules. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop. Tell the user which values are missing, and that they go in `settings.md` (a copy of `settings.example.md`, which says what each value is). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
 
 ## Overview
 
 Reads loose screenshots from the root of one Google Drive folder, understands each image, decides which agent should handle it, creates one entry in the Notion Agent Inbox, and moves the original image into `_archive` under a readable name. Several screenshots of the same post or document become a single entry. Images the skill cannot read stay where they are.
 
-This file is self-contained: the routing, naming and privacy rules are all below, and it needs no local files, so it can run from a phone or a scheduled cloud session.
+Apart from your settings, everything the skill needs is in this file. With the settings pasted in (see Settings above), it can run from a phone or a scheduled cloud session.
 
 Companion skills: `agent-inbox-loader` (reads entries) and `agent-inbox-pusher` (writes entries from a discussion). The database schema is in `references/inbox-database.md`.
 
@@ -60,9 +60,8 @@ If you can write files, keep a run log at `/tmp/screenshot_intake_YYYYMMDD.log` 
 8. **Rename and move.** For each image, one `update_file` call changes the title and the parent together:
    - Title: `YYYYMMDD_topic.ext`. Find the date in this order and note which source you used:
      1. A filename date pattern from `settings.md` (or the defaults above).
-     2. The file's capture time, if the connector returns one (for example in image metadata).
-     3. The Drive creation time.
-     Convert timestamps to the **Time zone** in `settings.md` before taking the date. If you had to use source 2 or 3, add one line to the Notion entry saying so.
+     2. The Drive creation time (`createdTime`), converted to the **Time zone** in `settings.md`. The Drive connector does not return a capture time.
+     If you had to use source 2, add one line to the Notion entry saying so.
    - For a group, every image is renamed `YYYYMMDD_topic_NNofMM.ext` with the post's own page numbers (zero-pad when the total has two digits). Use the first image's date for the whole group. If pages are missing, keep the original page numbers; do not renumber.
    - A single image that is clearly one page of a multi-page post may carry that page number in its filename (for example `_5of6`), but not in the entry.
    - Parent: set to the **Archive folder ID** from `settings.md`.

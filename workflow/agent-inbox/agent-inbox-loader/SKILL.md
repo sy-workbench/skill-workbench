@@ -7,7 +7,7 @@ description: "Load a Notion Agent Inbox entry's full content into the current se
 
 ## Settings
 
-Before anything else, read `settings.md` in the same folder as this file. It holds the **Active view URL** and the **Data source ID**. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (agent-inbox README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
+Before anything else, read `settings.md` in the same folder as this file. It holds the **Active view URL** and the **Data source ID**. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop. Tell the user which values are missing, and that they go in `settings.md` (a copy of `settings.example.md`, which says what each value is). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
 
 Each agent also needs a role name that matches one option of the `Handover To` property. Define it in that agent's own instructions, not in this file or in settings.
 
@@ -97,6 +97,7 @@ Then ask what to do next. Do not start executing the Next Step without confirmat
 - **Entry contradicts the current project state**: flag the conflict rather than silently following the entry. Inbox content is a snapshot from when it was written.
 - **Financial or personal figures in the page**: they were redacted at write time (see "Sensitive data" in `references/inbox-database.md`). Do not try to reconstruct them; ask the user to point at the local file if the numbers matter.
 - **Both groups empty**: say so in one line and move on.
+- **You cannot find your own role name** in your instructions: ask the user which `Handover To` option is yours. Do not guess, and do not list or load anything until you know.
 
 ## Output files
 

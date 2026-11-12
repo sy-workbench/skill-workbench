@@ -7,7 +7,7 @@ description: "Push the current session's discussion into the Notion Agent Inbox,
 
 ## Settings
 
-Mode B (paste) needs no settings. Before running Mode A, read `settings.md` in the same folder as this file. It holds the **Data source ID** and, optionally, extra **Sensitive data** rules. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop and tell the user to copy `settings.example.md` to `settings.md` and fill it in (agent-inbox README, Setup). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
+Mode B (paste) needs no settings. Before running Mode A, read `settings.md` in the same folder as this file. It holds the **Data source ID** and, optionally, extra **Sensitive data** rules. If it does not exist, or any value in it still has the form `<YOUR_...>`, stop. Tell the user which values are missing, and that they go in `settings.md` (a copy of `settings.example.md`, which says what each value is). Do not guess values. If `settings.md` cannot be read in your environment (for example a cloud or phone run that only stores this file), use the block headed `## Settings (pasted)` at the end of this file, if the user added one.
 
 ## Overview
 

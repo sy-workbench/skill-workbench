@@ -13,7 +13,7 @@ English: [README.md](README.md)
 
 例如：把談到一半的討論，換到另一個 agent 繼續；或是把手機上的截圖，交給該處理它的 agent。
 
-資料夾在 [workflow/](workflow/)。
+從 [agent-inbox](workflow/agent-inbox/README.zh-TW.md) 開始看。
 
 之後整理好更多 skills，我會再加上新的分類/類別。設計說明放在 [docs/](docs/)，不影響 skills 的使用，純粹記錄性質。
 

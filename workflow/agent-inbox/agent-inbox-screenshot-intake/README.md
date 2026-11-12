@@ -2,15 +2,15 @@
 
 Version 1.2. Last updated 2026-11-11. An add-on to [agent-inbox](../README.md).
 
-You often see something on your phone that you want to deal with later, take a screenshot, and then forget about it. This skill handles those screenshots. It reads the loose screenshots in a folder in Google Drive (or another storage you prefer), works out what each one is about, creates an entry in your Notion Agent Inbox, assigns it to the agent that should handle it, then renames the original image to an easy-to-read name and moves it into `_archive`. If several screenshots belong to the same post, they become one entry.
+You often see something on your phone that you want to deal with later, take a screenshot, and then forget about it. This skill handles those screenshots. It reads the loose screenshots in a Google Drive folder, works out what each one is about, creates an entry in your Notion Agent Inbox, assigns it to the agent that should handle it, then renames the original image to an easy-to-read name and moves it into `_archive`. If several screenshots belong to the same post, they become one entry.
 
 These entries go into the same database as the core skills. To read and handle them, use [agent-inbox-loader](../agent-inbox-loader/README.md).
 
 ## Requirements
 
-- The skill installed, and two connectors set up: the Notion MCP, and the MCP for the storage that holds your screenshot folder (for example, the Google Drive MCP).
+- The skill installed, and two connectors set up: the Notion MCP and the Google Drive MCP.
 - The Agent Inbox database described in the [agent-inbox README](../README.md#setup), with one extra property: `Source`, type URL. This skill writes the link to the original image there.
-- A folder in your storage for the screenshots, with a subfolder named `_archive` inside it. Processed images are moved there, so the main folder stays clear and you can always find an original again.
+- A Google Drive folder for the screenshots, with a subfolder named `_archive` inside it. Processed images are moved there, so the main folder stays clear and you can always find an original again.
 
 ## Setup
 
@@ -41,7 +41,7 @@ To run it on a schedule, set up a scheduled task.
 
 - Screenshots can contain private information. Before writing to Notion, the skill rewrites exact financial amounts, account details and identity document details into relative terms. Add your own rules under Sensitive data in `settings.md` to match what you consider sensitive.
 - Images it cannot read stay in the folder, so you can look at them yourself.
-- The date comes from the filename first. If your connector also returns a capture time, that is used next, and the Drive creation time last. Whether your connector returns a capture time has not been verified.
+- The date in the new filename comes from the original filename. If there is none, the Drive creation time is used.
 - Running it twice is safe, because processed images have already left the folder.
 
 ## Upgrading, and running in the cloud or on a phone
