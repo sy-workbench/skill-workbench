@@ -1,5 +1,7 @@
 # agent-inbox
 
+English | [繁體中文](README.zh-TW.md) | [简体中文](README.zh-CN.md)
+
 agent-inbox-pusher and agent-inbox-loader are a set of tools that work together. Their purpose is to let you quickly hand work over from one agent or session to another. The handover goes through a database called Agent Inbox, which you create in Notion: agent-inbox-pusher saves a discussion into it in a fixed format, and agent-inbox-loader reads the handover back.
 
 agent-inbox-pusher has another way to work, called Mode B. It skips Notion and prints a prompt that you can quickly copy and paste into a new session, to continue the discussion or carry out the work. Mode B needs no database and no agent-inbox-loader.

@@ -1,5 +1,7 @@
 # agent-inbox-loader
 
+English | [繁體中文](README.zh-TW.md) | [简体中文](README.zh-CN.md)
+
 Version 1.2. Last updated 2026-11-12. Part of [agent-inbox](../README.md).
 
 Loads an entry from your Notion Agent Inbox into the current agent session, so you can continue work that was started somewhere else. What it does, which phrases to say, the requirements, setup, upgrading, and running in the cloud or on a phone are all in the [agent-inbox README](../README.md).

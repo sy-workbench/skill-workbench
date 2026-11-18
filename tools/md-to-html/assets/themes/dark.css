@@ -1,0 +1,12 @@
+/* dark: the default palette turned down for night reading. */
+:root{
+  --bg:#1e1f22; --ink:#e6e6e3; --muted:#a59d95; --accent:#ecc632;
+  --accent-soft:rgba(236,198,50,.18); --link:#ecc632;
+  --card:#2a2b2f; --line:#3a3b40;
+  --table-bg:#25262a; --row-alt:#2c2d31;
+  --head-bg:#111214; --head-ink:#e6e6e3;
+  --code-bg:#111214; --code-ink:#e6e6e3;
+  --shadow-rgb:0,0,0;
+  --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:"SF Mono",Menlo,Consolas,monospace;
+}

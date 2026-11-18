@@ -1,0 +1,12 @@
+/* default: light grey paper, dark ink, yellow accent. */
+:root{
+  --bg:#eceded; --ink:#25262a; --muted:#6c625a; --accent:#ecc632;
+  --accent-soft:#f7e9a8; --link:#9a7f00;
+  --card:#f6f6f5; --line:#d9d9d6;
+  --table-bg:#ffffff; --row-alt:#f4f4f3;
+  --head-bg:#25262a; --head-ink:#eceded;
+  --code-bg:#25262a; --code-ink:#eceded;
+  --shadow-rgb:37,38,42;
+  --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:"SF Mono",Menlo,Consolas,monospace;
+}

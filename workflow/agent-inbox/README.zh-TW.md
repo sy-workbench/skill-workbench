@@ -1,5 +1,7 @@
 # agent-inbox
 
+[English](README.md) | 繁體中文 | [简体中文](README.zh-CN.md)
+
 agent-inbox-pusher 和 agent-inbox-loader 是一組工具可以搭配使用。這兩個 skills 的目的是讓我可以快速的把工作從一個 agent 或 session 交接給另一個。做法是透過在 Notion 裡創建的一個 Agent Inbox 的資料庫：agent-inbox-pusher 負責把討論按照規定格式存進去，agent-inbox-loader 負責讀取交接內容。
 
 agent-inbox-pusher 還有另一種用法，叫模式 B：不經過 Notion，直接產生一段 prompt，讓你可以快速複製貼上進新的 session 接著討論或執行。模式 B 不需要資料庫，也不用安裝 agent-inbox-loader。
