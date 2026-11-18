@@ -1,6 +1,6 @@
 ---
 name: "youtube-video-transcript"
-version: "1.0"
+version: "1.1"
 updated: "2026-11-18"
 description: "Turn a YouTube video into a transcript: Whisper does the transcription, and the video's own captions, if any, are kept only for comparison. Then fix names and terms the speech recognition got wrong. Use when the user pastes a YouTube link (youtube.com/watch, youtu.be, shorts, live) and asks for a transcript, especially when the video has no usable captions. One video at a time."
 ---
@@ -15,10 +15,17 @@ Read `settings.md` in the same folder as this file, if it exists. Every value is
 | Whisper model | `small` |
 | Caption languages | `en,en-orig` |
 | Who runs the script | `me` (the user runs it in a terminal) |
+| Keep audio | `no` (the audio is deleted after a successful run) |
 
 ## Overview
 
 The script `scripts/yt_transcript.py` (in the same folder as this file) downloads only the audio, captions and metadata with yt-dlp, then transcribes with Whisper. It does not open a browser, sign in or use cookies. Results go to one folder per video under the output folder, with an `index.md` that lists every video processed so far.
+
+## Scope of use
+
+This skill is for personal study notes on the user's own computer. A transcript is a copy of someone else's spoken content, so it is not for reposting or publishing another person's full transcript, or for commercial use. YouTube's Terms of Service restrict downloading content, and copyright rules differ between countries; the user checks what applies where they live. Do not tell the user whether a particular use is legal. If they ask, repeat this scope and suggest they check the rules themselves.
+
+## How it is split
 
 The work has two halves. Downloading is specific to YouTube. Transcribing and correcting are the same for any video source; see "Correcting names and terms" below.
 
@@ -35,14 +42,14 @@ The work has two halves. Downloading is specific to YouTube. Transcribing and co
 
 1. Take the 11-character video ID from the link.
 2. Read `index.md` in the output folder, if it exists, and look for that ID in the "Video ID" column.
-3. If it is there, answer from that video's folder and do not run again, unless the user asks for a fresh run.
+3. If it is there, answer from that video's folder and do not run again, unless the user asks for a fresh run. The audio is normally gone (it is deleted after a successful run); that is expected and does not mean the run is incomplete. A fresh run downloads the audio again.
 
 ### Step 2: run the script
 
-The command (`<skill folder>` is the folder this file is in; add `--out-root`, `--model` and `--sub-langs` only when the settings differ from the defaults above):
+The command (`<skill folder>` is the folder this file is in; add `--out-root`, `--model` and `--sub-langs` only when the settings differ from the defaults above; add `--keep-audio` only when **Keep audio** is `yes` or the user asks to keep the audio):
 
 ```
-python3 "<skill folder>/scripts/yt_transcript.py" "<link>" [--out-root <folder>] [--model <name>] [--sub-langs <list>] [--lang <code>]
+python3 "<skill folder>/scripts/yt_transcript.py" "<link>" [--out-root <folder>] [--model <name>] [--sub-langs <list>] [--lang <code>] [--keep-audio]
 ```
 
 - If **Who runs the script** is `me`: give the user the command, with the real path and link filled in, and tell them where to paste it (a terminal on their computer). Say what they should see when it finishes: the last line is the output folder's path; on macOS a "Done" notification also appears. Wait for them to say it finished or paste the error.
@@ -92,6 +99,7 @@ Saving:
 - No speech, or only music: report "no speech to transcribe" instead of passing off noise as a transcript.
 - Repeats remain after the second run: report the timestamps and let the user decide whether to accept the transcript.
 - Language: an English video gives an English transcript. Nothing is translated.
+- A run failed after the download: the audio stays in the video's folder, and the next run reuses it instead of downloading it again. It is deleted when a later run succeeds, unless **Keep audio** is `yes`.
 
 ## Output files
 
@@ -99,7 +107,7 @@ One folder per video, `<output folder>/<video id>/`:
 - `source-metadata.md`: platform, title, author, link, duration, tags, chapter titles, description (up to 5,000 characters), transcription settings.
 - `transcript_<lang>.txt` and `transcript_<lang>.srt`: the Whisper transcript (`<lang>` is the language code).
 - `platform_subtitle_<code>.srt`: captions in the same language as the transcript, if any. When several exist, the exact language code is kept over regional variants and automatic `-orig` captions; remaining ties follow the order in **Caption languages**. Auto-translated captions are not kept.
-- `audio.m4a` (or whichever audio format yt-dlp got): kept until the user deletes it.
+- `audio.m4a` (or whichever audio format yt-dlp got): deleted after a successful run, unless **Keep audio** is `yes` (`--keep-audio`). After a failed run it stays, so the next run can reuse it.
 - `transcript_<lang>_corrected.txt` and `corrections.md`: written in step 3.
 - `meta.json`: platform, video ID, title, author, link, date processed, duration, language.
 

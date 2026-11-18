@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1 (2026-11-18)
+- The audio is now deleted after a successful run. Add `--keep-audio`, or set `Keep audio: yes` in `settings.md`, to keep it. New optional setting: `Keep audio` (default `no`).
+- After a failed run the audio stays, so the next run reuses it instead of downloading again. It is deleted when a later run succeeds.
+- `source-metadata.md` records whether the audio was kept or deleted.
+- New "Scope of use" section in `SKILL.md` and the READMEs: for personal study notes only; do not repost or publish another person's full transcript; check the rules where you live.
+
 ## 1.0 (2026-11-18)
 - Initial public release.
 - One yt-dlp call downloads only the audio, captions and metadata. No browser, sign-in or cookies.

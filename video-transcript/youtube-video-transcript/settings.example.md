@@ -15,3 +15,6 @@ Caption languages: <YOUR_CAPTION_LANGUAGES>
 
 Who runs the script: `me` (the agent gives you the command) or `agent` (the agent runs it itself) (default `me`):
 Who runs the script: <YOUR_RUN_MODE>
+
+Keep the downloaded audio after a successful run: `yes` or `no` (default `no`, the audio is deleted once the transcript is written):
+Keep audio: <YOUR_KEEP_AUDIO>

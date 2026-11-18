@@ -12,13 +12,15 @@
     --lang CODE        force the transcription language, e.g. en, zh, ja (default: from YouTube, else Whisper detects)
     --sub-langs LIST   caption languages to ask YouTube for, comma separated (default: en,en-orig)
     --force            run even if this video already failed twice in the last 24 hours
+    --keep-audio       keep the downloaded audio after a successful run (default: delete it)
 
 # Workflow
   1. Download (platform-specific): one yt-dlp call fetches audio, captions and metadata.
      No browser, no sign-in, no cookies. Only captions in the video's own language are kept.
   2. Transcribe (shared by any platform): Whisper with default settings. If it repeats the same
      segment 3+ times in a row, run again with condition_on_previous_text False and keep the better run.
-  3. Write transcript files, source-metadata.md and meta.json, then rebuild index.md.
+  3. Write transcript files, delete the audio (unless --keep-audio), write source-metadata.md
+     and meta.json, then rebuild index.md.
 
 ### Edge Cases
   - yt-dlp, whisper, ffmpeg or ffprobe missing: stop and say which one to install.
@@ -30,11 +32,13 @@
   - yt-dlp fails (HTTP 429, sign-in required, region lock, removed video): stop, no automatic retry.
   - Same video failed 2 times in 24 hours: refuse unless --force.
   - No audio track: stop with "no speech to transcribe".
+  - Audio is deleted only after the transcript files are written. On any failure it stays, so a rerun
+    can reuse it (yt-dlp skips a file that is already there). If deleting fails, log it and carry on.
   - An unexpected error is logged in access_log.jsonl as "error"; only "fail" counts toward the 24-hour limit.
 
 # Output files
-  <out-root>/<video id>/: audio file, transcript_<lang>.txt/.srt, platform_subtitle_<lang>.srt (if any),
-  source-metadata.md, meta.json.  <out-root>/index.md and <out-root>/access_log.jsonl.
+  <out-root>/<video id>/: transcript_<lang>.txt/.srt, platform_subtitle_<lang>.srt (if any),
+  source-metadata.md, meta.json; the audio file only with --keep-audio or after a failed run.  <out-root>/index.md and <out-root>/access_log.jsonl.
   Log: /tmp/yt_transcript.log, lines formatted [YYYY-MM-DD HH:MM:SS] message.
 
 # Reference
@@ -220,7 +224,7 @@ def model_timeout(model, dur):
     return int(dur * slow + 300)  # +300 s covers loading, and downloading the model on its first use
 
 
-def transcribe(source, out, media, dur, subs, model):
+def transcribe(source, out, media, dur, subs, model, keep_audio=False):
     """Shared back half. `source` is a dict any platform downloader fills in:
     platform, video_id, title, author, link, description, tags, language (or None).
     Optional in `source`: chapters (a list of chapter titles).
@@ -260,6 +264,18 @@ def transcribe(source, out, media, dur, subs, model):
     shutil.rmtree(os.path.join(out, "_subs"), ignore_errors=True)
     log("captions kept: %s (candidates: %s)" % (sub_lang or "none", ", ".join(sorted(subs)) or "none"))
 
+    if keep_audio:
+        audio_note = "kept (--keep-audio)"
+        log("audio kept: %s" % os.path.basename(media))
+    else:
+        try:
+            os.remove(media)
+            audio_note = "deleted after transcription"
+            log("audio deleted: %s" % os.path.basename(media))
+        except OSError as e:
+            audio_note = "could not be deleted, still on disk"
+            log("audio delete failed: %s" % e)
+
     md = ["# %s" % (source.get("title") or source["video_id"]), "",
           "- Platform: %s" % source["platform"],
           "- Video ID: %s" % source["video_id"],
@@ -276,6 +292,7 @@ def transcribe(source, out, media, dur, subs, model):
           "- Second run (condition_on_previous_text False): %s, using run %d" % ("yes" if rerun else "no", chosen),
           "- Platform captions: %s" % (("yes (%s), for comparison only; may be manual or automatic" % sub_lang)
                                       if sub_path else "none, or download failed"),
+          "- Audio: %s" % audio_note,
           "- Name and term corrections: not done yet"]
     with open(os.path.join(out, "source-metadata.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(md) + "\n")
@@ -428,6 +445,7 @@ def main():
     ap.add_argument("--lang", default=None)
     ap.add_argument("--sub-langs", default="en,en-orig")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--keep-audio", action="store_true", help="keep the audio after a successful run")
     args = ap.parse_args()
     State.out_root = os.path.expanduser(args.out_root)
 
@@ -444,7 +462,7 @@ def main():
     log("script start")
     try:
         source, out, audio, dur, subs = download_youtube(args.link, args)
-        transcribe(source, out, audio, dur, subs, args.model)
+        transcribe(source, out, audio, dur, subs, args.model, args.keep_audio)
     except Fail as e:
         log("failed: %s" % e)
         if State.vid and State.count_failure:
