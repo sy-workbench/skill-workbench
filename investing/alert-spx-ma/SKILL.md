@@ -1,8 +1,8 @@
 ---
-name: "alert-spx-ma20"
+name: "alert-spx-ma"
 version: "1.0"
-updated: "2026-11-18"
-description: "Check whether the S&P 500 index (SPX), or another symbol you set, has pulled back to near its 20-day moving average, and whether today falls in one of your fallback buying months, then write a short entry-signal report. Use when run on a schedule, or when the user asks things like \"is SPX near the MA20?\", \"is it time to buy?\", or \"how far is SPX from its 20-day average?\"."
+updated: "2026-11-23"
+description: "Check whether the S&P 500 index (SPX), or another symbol you set, has pulled back to near its moving average (50-day by default), and whether today falls in one of your fallback buying months, then write a short entry-signal report. Use when run on a schedule, or when the user asks things like \"is SPX near the MA50?\", \"is it time to buy?\", or \"how far is SPX from its moving average?\"."
 ---
 
 ## Settings
@@ -14,7 +14,7 @@ Read `settings.md` in the same folder as this file. **Threshold** is required an
 | Symbol | `SPX` |
 | Security type | `IND` (index) |
 | Exchange | `CBOE` |
-| Moving average days | `20` |
+| Moving average days | `50` |
 | Threshold | none, required (percent above the average) |
 | Fallback months | none (condition B is off) |
 | Time zone | the user's local time zone if you know it, otherwise UTC |

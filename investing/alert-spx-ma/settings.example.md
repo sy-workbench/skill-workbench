@@ -1,4 +1,4 @@
-# Settings for alert-spx-ma20
+# Settings for alert-spx-ma
 
 How to use this file: copy it, rename the copy to `settings.md` (same folder), and fill in the copy. Do not edit this example, so that updating the skill can replace it safely. This skill's README in the skill-workbench repo explains each value.
 
@@ -17,7 +17,7 @@ Exchange: <YOUR_EXCHANGE>
 
 ## The rule
 
-Length of the simple moving average, in trading days (default `20`):
+Length of the simple moving average, in trading days (default `50`):
 Moving average days: <YOUR_MA_DAYS>
 
 Required. How close to the average counts as a pullback, in percent above it (no default; choose your own):

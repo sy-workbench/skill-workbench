@@ -26,7 +26,7 @@ Small utilities with a script behind them.
 
 ### investing
 
-[alert-spx-ma20](investing/alert-spx-ma20/README.md) checks whether the S&P 500 has pulled back to near its 20-day moving average, and, if you set fallback months, never waits forever. It only reports; it never trades.
+[alert-spx-ma](investing/alert-spx-ma/README.md) checks whether the S&P 500 has pulled back to near its 50-day moving average (you can set another length), and, if you set fallback months, never waits forever. It only reports; it never trades.
 
 I will add more categories as I clean up more skills. Design notes are in [docs/](docs/). They are only for reference and do not affect how you use the skills. If you use more than one agent, [one skill folder, two agents](docs/claude-codex-skill-sync.md) describes how I keep the same skills working in Claude and Codex.
 
