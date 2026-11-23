@@ -1,8 +1,8 @@
 ---
 name: "alert-spx-ma"
-version: "1.0"
-updated: "2026-11-23"
-description: "Check whether the S&P 500 index (SPX), or another symbol you set, has pulled back to near its moving average (50-day by default), and whether today falls in one of your fallback buying months, then write a short entry-signal report. Use when run on a schedule, or when the user asks things like \"is SPX near the MA50?\", \"is it time to buy?\", or \"how far is SPX from its moving average?\"."
+version: "1.1"
+updated: "2026-11-24"
+description: "Check whether the S&P 500 index (SPX), or another symbol you set, has pulled back to near its moving average (50-day by default), then write a short entry-signal report. Use when run on a schedule, or when the user asks things like \"is SPX near the MA50?\", \"is it time to buy?\", or \"how far is SPX from its moving average?\"."
 ---
 
 ## Settings
@@ -16,18 +16,15 @@ Read `settings.md` in the same folder as this file. **Threshold** is required an
 | Exchange | `CBOE` |
 | Moving average days | `50` |
 | Threshold | none, required (percent above the average) |
-| Fallback months | none (condition B is off) |
-| Time zone | the user's local time zone if you know it, otherwise UTC |
 | Price source | `IBKR` (the Interactive Brokers connector) |
 
 ## Overview
 
-A simple rule for adding to a long-term index position: buy on a pullback, but do not wait forever.
+A simple rule for adding to a long-term index position: buy on a pullback.
 
-- **Condition A (pullback):** the latest close is no more than **Threshold** percent above its **Moving average days** simple moving average.
-- **Condition B (fallback months):** the current month is one of the **Fallback months**. This is the "do not wait forever" part: if the market keeps rising and never pulls back, you still buy in these months.
+- **Pullback condition:** the latest close is no more than **Threshold** percent above its **Moving average days** simple moving average.
 
-Either condition met means the entry signal is on. The skill only reports; it never places orders and does not decide how much to buy.
+When the condition is met, the entry signal is on. The skill only reports; it never places orders and does not decide how much to buy.
 
 The skill keeps no files or state. Every run fetches fresh prices and computes the average itself.
 
@@ -51,19 +48,18 @@ With any other source: use the equivalent call that returns daily closes for the
 
 ### Step 2: pick the close and compute the average
 
-1. If the last bar is dated today and the exchange has not reached its regular closing time yet (for `SPX` on `CBOE`, 16:00 America/New_York; for another exchange, use its own regular close), the bar is still moving. Drop it and use the previous bar as the latest close, and say so in the report.
+1. If the last bar is dated today (in the exchange's own time zone) and the exchange has not reached its regular closing time yet (for `SPX` on `CBOE`, 16:00 America/New_York; for another exchange, use its own regular close), the bar is still moving. Drop it and use the previous bar as the latest close, and say so in the report.
 2. The latest close and its date come from the last complete bar.
 3. The moving average is the simple average of the last **Moving average days** complete closes, ending with that bar.
 4. Distance = (close / average - 1) x 100, rounded to two decimals.
 
-### Step 3: check the conditions
+### Step 3: check the condition
 
-- Condition A: close <= average x (1 + **Threshold** / 100).
-- Condition B: today's month, in **Time zone**, is in **Fallback months**. If **Fallback months** is empty, condition B is off; leave it out of the report. If you fell back to UTC because no time zone was set or known, say so in the report, since on the first or last day of a month the answer can differ.
+- Pullback condition: close <= average x (1 + **Threshold** / 100).
 
 ### Step 4: write the report
 
-Always write the report, whether or not a condition is met:
+Always write the report, whether or not the condition is met:
 
 ---
 
@@ -74,13 +70,12 @@ Always write the report, whether or not a condition is met:
 - {days}-day average: X,XXX.XX
 - Distance from the average: +X.XX% (above) or -X.XX% (below)
 
-**Conditions:**
+**Condition:**
 - Pullback (within {Threshold}% of the average): met / not met
-- Fallback month ({months}): met / not met
 
 **Result:**
-- If either is met: Entry signal is on. Consider your next planned purchase.
-- If neither is met: No signal yet. The close needs to fall about X.XX% to reach the threshold.
+- If it is met: Entry signal is on. Consider your next planned purchase.
+- If it is not met: No signal yet. The close needs to fall about X.XX% to reach the threshold.
 
 ---
 

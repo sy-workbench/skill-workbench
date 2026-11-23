@@ -23,12 +23,6 @@ Moving average days: <YOUR_MA_DAYS>
 Required. How close to the average counts as a pullback, in percent above it (no default; choose your own):
 Threshold: <YOUR_THRESHOLD_PERCENT>
 
-Months in which to buy anyway, as month numbers separated by commas (default: none, which turns this condition off):
-Fallback months: <YOUR_FALLBACK_MONTHS>
-
-Time zone used to decide the current month, as an IANA name such as `America/New_York` (default: your local time zone if the agent knows it, otherwise UTC):
-Time zone: <YOUR_TIME_ZONE>
-
 ## Data
 
 Where daily closes come from: `IBKR` for the Interactive Brokers connector, or the name of another connector or tool your agent has (default `IBKR`):

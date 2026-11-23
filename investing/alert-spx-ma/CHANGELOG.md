@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1 (2026-11-24)
+- Removed the fallback months condition and the time zone setting, which was only used for it. The skill now checks one condition: the pullback. If your `settings.md` still has `Fallback months` or `Time zone` lines, they are ignored and you can delete them.
+
 ## 1.0 (2026-11-23)
 - Initial public release.
 - Checks two entry conditions for a long-term index position: the latest close is within a set percentage of its simple moving average (pullback), or the current month is one of your fallback months (buy anyway).

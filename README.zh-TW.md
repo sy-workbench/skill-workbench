@@ -27,7 +27,7 @@
 
 ### investing
 
-[alert-spx-ma](investing/alert-spx-ma/README.zh-TW.md) 檢查 S&P 500 是否回到 50 日均線附近（天數可自訂），設了保底月份的話，也不會一直空等。它只回報，不會下單。
+[alert-spx-ma](investing/alert-spx-ma/README.zh-TW.md) 檢查 S&P 500 是否回到 50 日均線附近（天數可自訂）。它只回報，不會下單。
 
 之後整理好更多 skills，我會再加上新的分類/類別。設計說明放在 [docs/](docs/)，不影響 skills 的使用，純粹記錄性質。如果你同時用好幾個 agent，[one skill folder, two agents](docs/claude-codex-skill-sync.md)（英文）記錄了我怎麼讓同一套 skills 在 Claude 和 Codex 都能用。
 
