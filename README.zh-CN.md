@@ -29,7 +29,7 @@
 
 [alert-spx-ma](investing/alert-spx-ma/README.zh-CN.md) 检查 S&P 500 是否回到 50 日均线附近（天数可自定义）。它只汇报，不会下单。
 
-之后整理好更多 skills，我会再加上新的分类/类别。设计说明放在 [docs/](docs/)，不影响 skills 的使用，纯粹记录性质。如果你同时用好几个 agent，[one skill folder, two agents](docs/claude-codex-skill-sync.md)（英文）记录了我怎么让同一套 skills 在 Claude 和 Codex 都能用。
+之后整理好更多 skills，我会再加上新的分类/类别。设计说明放在 [docs/](docs/)，不影响 skills 的使用，纯粹记录性质。如果你同时用好几个 agent，[一份 skill 文件夹，两个 agent 共用](docs/claude-codex-skill-sync.zh-CN.md)记录了我怎么让同一套 skills 在 Claude Cowork 和 Codex 都能用。
 
 ## 怎么用
 

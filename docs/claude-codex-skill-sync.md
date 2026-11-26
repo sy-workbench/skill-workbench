@@ -1,16 +1,18 @@
 # Design notes: one skill folder, two agents
 
-These notes describe how I keep the same skills working in two agents, Claude and Codex, without maintaining two copies by hand. Nothing here is needed to use the skills in this repo. It is the setup I wish I had started with.
+[English](claude-codex-skill-sync.md) | [繁體中文](claude-codex-skill-sync.zh-TW.md) | [简体中文](claude-codex-skill-sync.zh-CN.md)
 
-Last updated 2026-11-18.
+These notes describe how I keep the same skills working in two agents, Claude Cowork and Codex, without maintaining two copies by hand. Nothing here is needed to use the skills in this repo. It is the setup I wish I had started with.
+
+Last updated 2026-11-26.
 
 ## The problem
 
-I use Claude for most discussions and Codex for some coding work. Many of my skills are useful in both. At first each agent had its own copy, and the copies drifted: I fixed a bug in one, forgot the other, and a week later could not tell which version was right.
+I use Cowork for most discussions and Codex for some coding work. Many of my skills are useful in both. From the start I did not want a copy in each place, because then every fix has to be made twice. I wanted a change on one side to reach the other side by itself, so I worked out a setup with both agents before I wrote the first skill.
 
 Two things make this harder than copying files:
 
-- The agents read skills from different places. Codex reads skill folders from my computer. The Claude app keeps skills in my account in the cloud, so it never sees my local files.
+- The agents read skills from different places. Codex reads skill folders from my computer. Cowork keeps skills in my account in the cloud, so it never sees my local files.
 - Not every skill belongs everywhere. Some only make sense inside one project.
 
 ## The idea
@@ -20,37 +22,92 @@ Keep exactly one master copy of every skill on my own computer. Every agent eith
 ```
  master: ~/skills/<name>/SKILL.md          (the only copy I edit)
    |
-   |-- Codex:      ~/.agents/skills/<name>  -> symlink to the master, picks up changes at once
+   |-- Codex:   ~/.agents/skills/<name>  -> symlink to the master, picks up changes at once
    |
-   '-- Claude app: account-level skill      -> re-uploaded by hand after each change
+   '-- Cowork:  account-level skill      -> submitted again after each change
 ```
 
 The master is plain folders, one per skill, each with a `SKILL.md`. Zip files that an app needs for installation are only backups, never the master.
 
-## Step 1: decide where a skill lives
+Claude Code works like Codex here. It reads skills from a local folder (`~/.claude/skills/<name>/SKILL.md` for personal skills) and follows a symlink to the target folder, so it needs no resubmitting.
 
-Ask one question: is this skill only used by one project?
+## What to set up: four places
 
-| Kind | Test | Where the master lives | Needs syncing? |
-|---|---|---|---|
-| Shared skill | Used across projects or agents | One shared skills folder | Yes, follow the steps below |
-| Project skill | Only one project uses it | That project's own `skills/` folder | Not for agents that read local folders: they read it from the project folder. An agent that keeps skills in the cloud still needs it uploaded, the same as Step 2 |
+1. **The master folder.** One folder per skill, each with a `SKILL.md`.
+2. **A rules doc.** A document, kept in your notes or knowledge base, that is written for the agent to follow. I call mine an agent wiki page. Its `description` says "read before adding, changing or removing any skill", which is how an agent finds it. A template is below.
+3. **A user preference for both agents.** It makes every new session start by looking at the rules doc and the skills.
+4. **A user preference for Codex only.** It makes Codex connect any shared skill it is missing.
 
-Most of the trouble comes from shared skills, so the rest of these notes are about them.
+The two preferences are what make this work without me asking each time. An agent only follows a rules doc if something tells it the doc exists. Scanning reads just the `name` and `description` of each file, so it stays cheap.
 
-## Step 2: connect each agent to the master
-
-**Agents that read local folders** (Codex, and coding agents in general): link the skill folder instead of copying it.
+### The preference for both agents
 
 ```
-ln -s ~/skills/<name> ~/.agents/skills/<name>
+At the first message of every new session, scan two places: the rules folder
+and the skills folder. Read only the name and description of each file, not
+the full text. Read a file in full only when its description matches the
+current task. If you cannot tell whether one matches, ask me.
 ```
 
-Codex follows the link, so an edit to the master takes effect in the next session with nothing else to do. `~/.agents/skills` is the user-level location in the current Codex documentation; older Codex versions used `~/.codex/skills`. Check your version's documentation if a linked skill does not show up.
+### The preference for Codex only
 
-**Agents that keep skills in the cloud** (the Claude app): there is no link to make. After changing the master, upload or save the skill again in the app. This step is easy to forget, so I treat "the cloud copy needs updating" as part of finishing any change, not as a later chore.
+```
+At the first message of every new session, scan the shared skills folder
+(<skills-master>) and compare it with Codex's own skills folder
+(<codex-skills-dir>). If a skill is missing there, create a symlink to the
+master. If something already exists there, leave it alone. Report only what
+was added or looks wrong. Follow the current permission rules; if you cannot
+write there, report what is unfinished and why.
+```
 
-## Step 3: version every change
+`~/.agents/skills` is the user-level location in the current Codex documentation; older Codex versions used `~/.codex/skills`. Check your version's documentation if a linked skill does not show up.
+
+### The rules doc
+
+```
+---
+name: skill-sync-rules
+description: Read before adding, changing or removing any skill. Says where
+  the master lives, how each agent connects to it, and how to version a change.
+---
+
+# Skill sync rules
+
+## 1. Decide the kind of skill
+- Shared skill: used across projects or agents. The master lives in the
+  shared skills folder. It needs syncing, so follow sections 2 to 4.
+- Project skill: used by one project only. The master lives in that
+  project's own skills folder. Agents that read local folders read it from
+  there. An agent that keeps skills in the cloud still needs it submitted.
+
+## 2. Add a shared skill
+Order matters: create the master first, then connect the agents.
+1. Create <skills-master>/<name>/SKILL.md with version and updated fields,
+   and a CHANGELOG.md that starts at 1.0.
+2. Codex: link <codex-skills-dir>/<name> to the master (symlink).
+3. Cowork: submit it as a new skill.
+
+## 3. Change a shared skill
+1. Edit the master only. Raise the version, update the date, and add a line
+   to CHANGELOG.md.
+2. Codex: nothing to do, the link already points to the master.
+3. Cowork: submit the change again. When you finish a change, remind me:
+   "the Cowork copy of this skill needs to be submitted again". Otherwise
+   Cowork stays on the old version.
+
+## 4. Remove a shared skill
+1. Remove the Codex link.
+2. Remove the skill from the Cowork account.
+3. Delete the master.
+
+## Never
+- Edit through the Codex link, or edit the cloud copy.
+- Keep a hand-written list of shared skills. The folder is the list.
+```
+
+When Cowork is asked to submit a skill, it shows a review card that I approve. That is the manual step in section 3.
+
+## Version every change
 
 Without versions, "which copy is current?" has no answer. Every skill gets:
 
@@ -59,7 +116,7 @@ Without versions, "which copy is current?" has no answer. Every skill gets:
 
 Some apps keep only the name and description when you save a skill, so the `version` field may not survive in the cloud copy. That is one more reason the master and its changelog are the reference, and the cloud copy is checked against them, not the other way round.
 
-## Step 4: the same idea for project instructions
+## The same idea for project instructions
 
 Agents also read a project-level instruction file, and they look for different names: Claude Code reads `CLAUDE.md`, Codex reads `AGENTS.md`. I keep one file and link the other name to it, inside the project folder:
 
@@ -78,5 +135,5 @@ Both agents now read the same instructions. Where they need different behavior, 
 
 ## What this does not solve
 
-- The cloud copy still needs a manual step. If a tool ever offers a way to sync account skills from a local folder, this becomes the first thing to automate.
+- Cowork still needs a manual step. The rules doc makes the agent remind me, but I still approve the submission myself. If a tool ever offers a way to sync account skills from a local folder, this becomes the first thing to automate.
 - Settings that differ per agent (paths, names) still need care. The skills in this repo keep those values in a separate `settings.md`, so `SKILL.md` can be identical everywhere.
